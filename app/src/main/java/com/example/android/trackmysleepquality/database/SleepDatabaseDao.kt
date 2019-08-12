@@ -32,7 +32,7 @@ interface SleepDatabaseDao {
     fun update(night: SleepNight)
 
     @Query("SELECT * FROM daily_sleep_quality_table WHERE nightId = :key") // :thing is how you reference a parameter from the function
-    fun getNight(key: Long): SleepNight
+    fun getNight(key: Long): SleepNight?
 
     @Query("DELETE FROM daily_sleep_quality_table")
     fun deleteAllRows()
