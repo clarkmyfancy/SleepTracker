@@ -21,8 +21,10 @@ import android.provider.SyncStateContract.Helpers.insert
 import android.provider.SyncStateContract.Helpers.update
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
 import com.example.android.trackmysleepquality.database.SleepNight
+import com.example.android.trackmysleepquality.formatNights
 import kotlinx.coroutines.*
 
 /**
@@ -46,7 +48,17 @@ class SleepTrackerViewModel(
 
     private var tonight = MutableLiveData<SleepNight?>()
 
+    // this references live data bc we defined getAllNights to return LiveData
     private val nights = database.getAllNights()
+
+    // cannot just display the nights variable because it is an objecvt
+    // we use a transformation map to take care of this
+    // this function is called every time nights recieves new data from the database
+    val nightsString = Transformations.map(nights) { nights ->
+        // we pass in application.resources to have access to the strings resources
+            // now in the xml we can repladce the text for this text view
+        formatNights(nights, application.resources)
+    }
 
     init {
         initializeTonight()
