@@ -56,6 +56,7 @@ fun convertNumericQualityToString(quality: Int, resources: Resources): String {
  * HH:mm - Hours and minutes in 24hr format
  */
 @SuppressLint("SimpleDateFormat")
+// converts system time to friendly string
 fun convertLongToDateString(systemTime: Long): String {
     return SimpleDateFormat("EEEE MMM-dd-yyyy' Time: 'HH:mm")
             .format(systemTime).toString()
@@ -74,6 +75,8 @@ fun convertLongToDateString(systemTime: Long): String {
  * @return  Spanned - An interface for text that has formatting attached to it.
  *           See: https://developer.android.com/reference/android/text/Spanned
  */
+
+// the type Spanned is an html formatted string
 fun formatNights(nights: List<SleepNight>, resources: Resources): Spanned {
     val sb = StringBuilder()
     sb.apply {
