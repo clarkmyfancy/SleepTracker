@@ -20,6 +20,7 @@ import android.app.Application
 import android.provider.SyncStateContract.Helpers.insert
 import android.provider.SyncStateContract.Helpers.update
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.example.android.trackmysleepquality.database.SleepDatabaseDao
@@ -59,6 +60,14 @@ class SleepTrackerViewModel(
         // we pass in application.resources to have access to the strings resources
             // now in the xml we can repladce the text for this text view
         formatNights(nights, application.resources)
+    }
+
+    private val _navigateToSleepQuality = MutableLiveData<SleepNight>()
+    val navigateToSleepQuality: LiveData<SleepNight>
+        get() = _navigateToSleepQuality
+
+    fun doneNavigating() {
+        _navigateToSleepQuality.value = null
     }
 
     init {
@@ -111,6 +120,8 @@ class SleepTrackerViewModel(
             oldNight.endTimeMilli = System.currentTimeMillis()
 
             update(oldNight)
+            // this variable is only non null when we can set a sleep quality. if we cant set it, we dont navigate
+            _navigateToSleepQuality.value = oldNight
         }
     }
 
