@@ -38,6 +38,7 @@ class SleepQualityViewModel(
         _navigateToSleepTracker.value = null
     }
 
+    // the click handler
     fun onSetSleepQuality(quality:Int) {
         uiScope.launch {
             // switch to the IO dispatcher thread
