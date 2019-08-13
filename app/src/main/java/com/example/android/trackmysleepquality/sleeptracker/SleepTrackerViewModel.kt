@@ -36,6 +36,14 @@ class SleepTrackerViewModel(
         // AndroidViewModel is basically the same as ViewModel but it allows the application thing to be used as a property of this class
         application: Application) : AndroidViewModel(application) {
 
+    private val _showSnackbarEvent = MutableLiveData<Boolean>()
+    val showSnackbarEvent: LiveData<Boolean>
+        get() = _showSnackbarEvent
+
+    fun doneShowingSnackbar() {
+        _showSnackbarEvent.value = false
+    }
+
     // use coroutines when you do db operations
     // to manage coroutines we need a job
     // job allows us to cancel all coroutine started by this view model when the view model is no longer used and destroyed
@@ -60,6 +68,21 @@ class SleepTrackerViewModel(
         // we pass in application.resources to have access to the strings resources
             // now in the xml we can repladce the text for this text view
         formatNights(nights, application.resources)
+    }
+
+    // state of the variable changes based on the state of tonight
+    val startButtonVisible = Transformations.map(tonight) {
+        // tonight is null at the beginning, so if that is the case, we want the start button visible
+        null == it
+    }
+
+    val stopButtonVisible = Transformations.map(tonight) {
+        null != it
+    }
+
+    val clearButtonVisible = Transformations.map(nights) {
+        // want to hide the button if there is no days recorded
+        it?.isNotEmpty()
     }
 
     private val _navigateToSleepQuality = MutableLiveData<SleepNight>()
@@ -135,6 +158,7 @@ class SleepTrackerViewModel(
         uiScope.launch {
             clear()
             tonight.value = null
+            _showSnackbarEvent.value = true
         }
     }
 
